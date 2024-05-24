@@ -1,6 +1,6 @@
 # Game Server
 
-This is a simple game server implemented in Java.
+This is a simple rock-scissors-paper game server implemented in Java.
 
 ## Getting Started
 
