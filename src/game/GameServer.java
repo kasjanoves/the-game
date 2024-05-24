@@ -45,7 +45,7 @@ public class GameServer {
 
     //threaded player connection
     static private class PlayerConnection extends Thread {
-        private Socket clientSocket;
+        private final Socket clientSocket;
         private PrintWriter out;
         private BufferedReader in;
         @Getter
