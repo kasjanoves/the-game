@@ -27,7 +27,7 @@ To build the project, run the `build.bat` script. This script compiles all Java 
 
 ## Running the server
 
-To run the server, execute the `run.bat` script. This script runs the JAR file with the `java` command.
+To run the server, execute the `start.bat` script. This script runs the JAR file with the `java` command.
 
 [Java](https://www.oracle.com/java/) - The programming language used
 
