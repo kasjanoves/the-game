@@ -1,8 +1,5 @@
 package game;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.extern.java.Log;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -19,12 +16,15 @@ import java.util.concurrent.LinkedBlockingQueue;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
+import java.util.logging.Logger;
 
 /**
  * @author Kasjanoves
  */
-@Log
+
 public class GameServer {
+
+    private static final Logger log = Logger.getLogger(GameServer.class.getName());
 
     private ServerSocket serverSocket;
     private final ExecutorService executor = Executors.newFixedThreadPool(10);
@@ -48,10 +48,7 @@ public class GameServer {
         private final Socket clientSocket;
         private PrintWriter out;
         private BufferedReader in;
-        @Getter
         private String clientName;
-        @Getter
-        @Setter
         private GameSession gameSession;
         private final Lock lock = new ReentrantLock();
         private final Condition condition = lock.newCondition();
@@ -59,6 +56,14 @@ public class GameServer {
         public PlayerConnection(Socket socket) {
             log.info("new player connected");
             this.clientSocket = socket;
+        }
+
+        public String getClientName() {
+            return clientName;
+        }
+
+        public void setGameSession(GameSession gameSession) {
+            this.gameSession = gameSession;
         }
 
         public void run() {
@@ -179,12 +184,10 @@ public class GameServer {
     static private class GameSession {
         private final PlayerConnection player1;
         private final PlayerConnection player2;
-        @Getter
         private boolean isOver;
         private GameEntity player1Move;
         private GameEntity player2Move;
         private final CyclicBarrier barrier = new CyclicBarrier(2);
-        @Getter
         private PlayerConnection winner;
         private String player1Answer;
         private String player2Answer;
@@ -231,6 +234,12 @@ public class GameServer {
             if (winner == null) {
                 GameEntity otherPlayersMove = getOtherPlayersMove(player);
                 winner = getTheWinner(player, move, otherPlayersMove, otherPlayer);
+                if (winner == null) {
+                    player.sendMessage("start again");
+                    log.info("draw, start again");
+                    resetTheSession();
+                    return;
+                }
             }
 
             //ask if they want to play again
@@ -253,6 +262,10 @@ public class GameServer {
             }
 
             //reset the game session
+            resetTheSession();
+        }
+
+        private void resetTheSession() {
             barrier.reset();
             player1Move = null;
             player2Move = null;

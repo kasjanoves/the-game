@@ -1,8 +1,5 @@
 package game;
 
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-
 import java.util.Arrays;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -10,16 +7,21 @@ import java.util.stream.Collectors;
 /**
  * @author Kasjanoves
  */
-@AllArgsConstructor
 public enum GameEntity {
-
     ROCK("rock", 3),
     SCISSORS("scissors", 2),
     PAPER("paper", 1);
-
-    @Getter
     private final String name;
     private final int strength;
+
+    GameEntity(String name, int strength) {
+        this.name = name;
+        this.strength = strength;
+    }
+
+    public String getName() {
+        return name;
+    }
 
     public int compare(GameEntity other) {
         if (this == other) {
