@@ -97,6 +97,7 @@ public class GameServer {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
+            availableClientConnections.remove(this);
         }
 
         // if there is no game session, create a new one and take another player
@@ -232,6 +233,7 @@ public class GameServer {
             }
             //define the winner
             if (winner == null) {
+                log.info(String.format("player %s defines the winner", player.getClientName()));
                 GameEntity otherPlayersMove = getOtherPlayersMove(player);
                 winner = getTheWinner(player, move, otherPlayersMove, otherPlayer);
                 if (winner == null) {
